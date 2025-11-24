@@ -15,4 +15,3 @@ public final class PlantInput {
     private double mass;
     private List<PairInput> sections;
 }
-

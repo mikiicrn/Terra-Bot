@@ -16,5 +16,3 @@ public class TerritorySectionParamsInput {
     private List<WaterInput> water;
     private List<AirInput> air;
 }
-
-

@@ -15,4 +15,3 @@ public final class AnimalInput {
     private double mass;
     private List<PairInput> sections;
 }
-

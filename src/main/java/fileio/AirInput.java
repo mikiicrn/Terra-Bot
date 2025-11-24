@@ -23,4 +23,3 @@ public final class AirInput {
     private double dustParticles;
     private List<PairInput> sections;
 }
-

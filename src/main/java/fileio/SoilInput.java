@@ -24,4 +24,3 @@ public final class SoilInput {
     private double salinity;
     private List<PairInput> sections;
 }
-

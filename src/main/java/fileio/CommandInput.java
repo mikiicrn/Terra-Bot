@@ -26,4 +26,3 @@ public final class CommandInput {
     private String improvementType;
     private String name;
 }
-

@@ -21,4 +21,3 @@ public class WaterInput {
     private boolean isFrozen;
     private List<PairInput> sections;
 }
-
