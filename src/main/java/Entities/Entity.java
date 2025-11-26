@@ -14,4 +14,10 @@ public abstract class Entity {
         this.x = x;
         this.y = y;
     }
+    protected double normalize(double score) {
+        return Math.max(0, Math.min(100, score));
+    }
+    protected double round(double score) {
+        return Math.round(score * 100.0) / 100.0;
+    }
 }
