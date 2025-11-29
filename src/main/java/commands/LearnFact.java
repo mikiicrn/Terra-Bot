@@ -8,30 +8,53 @@ import entities.Entity;
 
 import java.util.Objects;
 
-public class LearnFact {
-    public static void command (CommandInput command,
-                                PlayGame playGame,
-                                TerraBot terrabot,
-                                ArrayNode output) {
-        if (terrabot.getBattery() < 2) {
-            String errorMsg = "ERROR: Not enough battery left. Cannot perform action";
-            JSONOutput.stateSimulation(errorMsg, command, output);
+public final class LearnFact {
+    private static final int ENERGY_COST = 2;
+    private static final String MSG_SUCCESS =
+            "The fact has been successfully saved in the database.";
+    private static final String ERR_BATTERY =
+            "ERROR: Not enough battery left. Cannot perform action";
+    private static final String ERR_SUBJECT =
+            "ERROR: Subject not yet saved. Cannot perform action";
+
+    // private constructor to prevent instantiation of utility class
+    private LearnFact() {
+    }
+
+    /**
+     * executes the learn fact command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
+    public static void command(final CommandInput command,
+                                final PlayGame playGame,
+                                final TerraBot terrabot,
+                                final ArrayNode output) {
+        if (terrabot.getBattery() < ENERGY_COST) {
+            JSONOutput.stateSimulation(ERR_BATTERY, command, output);
             return;
         }
-        System.out.println("DEBUG LearnFact: Looking for " + command.getComponents() + " in inventory");
+
+        String targetEntity = command.getComponents();
+        boolean found = false;
+
+        // check if the entity exists in inventory
         for (Entity entity : terrabot.getInventory()) {
-            System.out.println("DEBUG LearnFact: Found entity " + entity.getName());
-            if (Objects.equals(entity.getName(), command.getComponents())) {
-                terrabot.addFact(command.getComponents(), command.getSubject());
-                terrabot.recharge(-2);
-                String message = "The fact has been successfully saved in the database.";
-                JSONOutput.stateSimulation(message, command, output);
-                return;
+            if (Objects.equals(entity.getName(), targetEntity)) {
+                found = true;
+                break;
             }
         }
-        System.out.println("DEBUG LearnFact: Entity not found in inventory");
-        String message = "ERROR: Subject not yet saved. Cannot perform action";
-        JSONOutput.stateSimulation(message, command, output);
-        return;
+
+        if (found) {
+            terrabot.addFact(targetEntity, command.getSubject());
+            terrabot.recharge(-ENERGY_COST);
+            JSONOutput.stateSimulation(MSG_SUCCESS, command, output);
+        } else {
+            JSONOutput.stateSimulation(ERR_SUBJECT, command, output);
+        }
     }
 }

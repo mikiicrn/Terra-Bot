@@ -7,7 +7,7 @@ import model.Cell;
 import model.PlayGame;
 import model.TerraBot;
 
-public class Scanning {
+public final class Scanning {
 
     private static final int ENERGY_COST = 7;
     private static final String NONE = "none";
@@ -21,6 +21,18 @@ public class Scanning {
     private static final String ERR_NOT_FOUND =
             "ERROR: Object not found. Cannot perform action";
 
+    // private constructor to prevent instantiation of utility class
+    private Scanning() {
+    }
+
+    /**
+     * executes the scanning command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
                                final TerraBot terrabot,
@@ -55,10 +67,9 @@ public class Scanning {
             } else {
                 message = ERR_NOT_FOUND;
             }
-            // hasSound was checked to be false in previous condition
-            // so hasSound must be true here
         } else if (hasColor && hasSmell) {
             // case: Animal (sight + smell + sound)
+            // hasSound must be true here because !hasSound was checked previously
             if (scanSuccess(cell.getAnimal(), command, terrabot)) {
                 message = MSG_ANIMAL;
             } else {
@@ -73,8 +84,12 @@ public class Scanning {
     }
 
     /**
-     * helper method to handle the common logic for a successful scan
-     * returns true if the entity exists and was processed, false otherwise
+     * Helper method to handle the common logic for a successful scan.
+     *
+     * @param entity   The entity found in the cell.
+     * @param command  The input command.
+     * @param terrabot The robot instance.
+     * @return True if the entity exists and was processed, false otherwise.
      */
     private static boolean scanSuccess(final Entity entity,
                                        final CommandInput command,

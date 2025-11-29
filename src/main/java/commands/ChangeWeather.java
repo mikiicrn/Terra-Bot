@@ -8,12 +8,24 @@ import model.Weather;
 
 import static java.lang.IO.println;
 
-public class ChangeWeather {
+public final class ChangeWeather {
     private static final String MSG_SUCCESS =
             "The weather has changed.";
     private static final String MSG_ERROR =
             "ERROR: The weather change does not affect the environment. Cannot perform action";
 
+    // private constructor to prevent instantiation of utility class
+    private ChangeWeather() {
+    }
+
+    /**
+     * executes the change weather command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
                                final TerraBot terrabot,

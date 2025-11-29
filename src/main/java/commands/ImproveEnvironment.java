@@ -8,7 +8,7 @@ import model.Cell;
 import model.PlayGame;
 import model.TerraBot;
 
-public class ImproveEnvironment {
+public final class ImproveEnvironment {
 
     private static final int ENERGY_COST = 10;
     private static final double LOW_UPDATE = 0.2;
@@ -21,6 +21,18 @@ public class ImproveEnvironment {
     private static final String ERR_FACT =
             "ERROR: Fact not yet saved. Cannot perform action";
 
+    // private constructor to prevent instantiation of utility class
+    private ImproveEnvironment() {
+    }
+
+    /**
+     * executes the improve environment command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
                                final TerraBot terrabot,

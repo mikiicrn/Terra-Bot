@@ -1,6 +1,14 @@
 package model;
 
-import commands.*;
+import commands.ChangeWeather;
+import commands.ImproveEnvironment;
+import commands.JSONOutput;
+import commands.LearnFact;
+import commands.MoveRobot;
+import commands.PrintEnvironmentConditions;
+import commands.PrintKnowledgeBase;
+import commands.PrintMap;
+import commands.Scanning;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.CommandInput;
 
@@ -58,7 +66,7 @@ public final class Simulation {
         switch (type) {
             case "moveRobot":
                 if (terrabot != null) {
-                    commands.MoveRobot.command(command, playGame, terrabot, output);
+                    MoveRobot.command(command, playGame, terrabot, output);
                 }
                 break;
 
@@ -70,7 +78,7 @@ public final class Simulation {
 
             case "changeWeatherConditions":
                 if (terrabot != null) {
-                    commands.ChangeWeather.command(command, playGame, terrabot, output);
+                    ChangeWeather.command(command, playGame, terrabot, output);
                 }
                 break;
 
@@ -82,7 +90,7 @@ public final class Simulation {
 
             case "learnFact":
                 if (terrabot != null) {
-                    commands.LearnFact.command(command, playGame, terrabot, output);
+                    LearnFact.command(command, playGame, terrabot, output);
                 }
                 break;
 
@@ -94,7 +102,7 @@ public final class Simulation {
 
             case "improveEnvironment":
                 if (terrabot != null) {
-                    commands.ImproveEnvironment.command(command, playGame, terrabot, output);
+                    ImproveEnvironment.command(command, playGame, terrabot, output);
                 }
                 break;
 

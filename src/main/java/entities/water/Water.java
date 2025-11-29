@@ -2,24 +2,44 @@ package entities.water;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fileio.WaterInput;
-import lombok.EqualsAndHashCode;
-import entities.air.Air;
 import entities.Entity;
+import entities.air.Air;
 import entities.soil.Soil;
+import fileio.WaterInput;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Water extends Entity {
+public final class Water extends Entity {
     protected double salinity;
     protected double pH;
     protected double purity;
     protected double turbidity;
     protected double contaminantIndex;
     protected boolean isFrozen;
-    public Water(WaterInput water) {
+
+    private static final double UPDATE_AMOUNT = 0.1;
+
+    private static final double MAX_PURITY = 100.0;
+    private static final double OPTIMAL_PH = 7.5;
+    private static final double MAX_SALINITY = 350.0;
+    private static final double MAX_TURBIDITY = 100.0;
+    private static final double MAX_CONTAMINANT = 100.0;
+    private static final double PERCENTAGE_SCALE = 100.0;
+
+    private static final double WEIGHT_PURITY = 0.3;
+    private static final double WEIGHT_PH = 0.2;
+    private static final double WEIGHT_SALINITY = 0.15;
+    private static final double WEIGHT_TURBIDITY = 0.1;
+    private static final double WEIGHT_CONTAMINANT = 0.15;
+    private static final double WEIGHT_FROZEN = 0.2;
+
+    private static final int GOOD_QUALITY_THRESHOLD = 70;
+    private static final int MODERATE_QUALITY_THRESHOLD = 40;
+
+    public Water(final WaterInput water) {
         super();
         this.name = water.getName();
         this.type = water.getType();
@@ -32,39 +52,64 @@ public class Water extends Entity {
         this.isFrozen = water.isFrozen();
     }
 
-    public void updateWater(Soil soil, Air air) {
-        if (!scanned)
+    /**
+     * updates the water state and surrounding environment
+     * increases soil water retention and air humidity
+     *
+     * @param soil the soil interacting with the water
+     * @param air the air interacting with the water
+     */
+    public void updateWater(final Soil soil, final Air air) {
+        if (!scanned) {
             return;
-        soil.updateWaterRetention(0.1);
-        air.updateHumidity(0.1);
+        }
+        soil.updateWaterRetention(UPDATE_AMOUNT);
+        air.updateHumidity(UPDATE_AMOUNT);
     }
 
-    public void toJson(ObjectNode node) {
+    /**
+     * exports the water entity data to a JSON object
+     *
+     * @param node the JSON node to populate
+     */
+    public void toJson(final ObjectNode node) {
         node.put("type", this.type);
         node.put("name", this.name);
         node.put("mass", this.mass);
     }
 
+    /**
+     * calculates the overall quality score of the water
+     * based on purity, pH, salinity, turbidity, contaminants and frozen state
+     *
+     * @return the calculated quality score
+     */
     public double getQuality() {
-        double purity_score        = purity / 100;
-        double pH_score            = 1 - Math.abs(pH - 7.5) / 7.5;
-        double salinity_score      = 1 - (salinity / 350);
-        double turbidity_score     = 1 - (turbidity / 100);
-        double contaminant_score   = 1 - (contaminantIndex / 100);
-        double frozen_score        = isFrozen ? 0 : 1;
-        return (0.3 * purity_score
-                + 0.2 * pH_score
-                + 0.15 * salinity_score
-                + 0.1 * turbidity_score
-                + 0.15 * contaminant_score
-                + 0.2 * frozen_score) * 100;
+        double purityScore = purity / MAX_PURITY;
+        double phScore = 1 - Math.abs(pH - OPTIMAL_PH) / OPTIMAL_PH;
+        double salinityScore = 1 - (salinity / MAX_SALINITY);
+        double turbidityScore = 1 - (turbidity / MAX_TURBIDITY);
+        double contaminantScore = 1 - (contaminantIndex / MAX_CONTAMINANT);
+        double frozenScore = isFrozen ? 0 : 1;
+
+        return (WEIGHT_PURITY * purityScore
+                + WEIGHT_PH * phScore
+                + WEIGHT_SALINITY * salinityScore
+                + WEIGHT_TURBIDITY * turbidityScore
+                + WEIGHT_CONTAMINANT * contaminantScore
+                + WEIGHT_FROZEN * frozenScore) * PERCENTAGE_SCALE;
     }
 
+    /**
+     * categorizes the water quality into good, moderate or poor
+     *
+     * @return string representing the category
+     */
     public String getQualityCategory() {
         double quality = getQuality();
-        if (quality >= 70) {
+        if (quality >= GOOD_QUALITY_THRESHOLD) {
             return "good";
-        } else if (quality >= 40) {
+        } else if (quality >= MODERATE_QUALITY_THRESHOLD) {
             return "moderate";
         } else {
             return "poor";

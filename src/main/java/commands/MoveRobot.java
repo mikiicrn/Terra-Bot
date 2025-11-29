@@ -6,11 +6,27 @@ import model.Cell;
 import model.PlayGame;
 import model.TerraBot;
 
-public class MoveRobot {
+/**
+ * Command to move the robot to the adjacent cell with the lowest risk.
+ */
+public final class MoveRobot {
 
     private static final String ERR_BATTERY =
             "ERROR: Not enough battery left. Cannot perform action";
+    private static final int DIRECTIONS = 4;
 
+    // private constructor to prevent instantiation of utility class
+    private MoveRobot() {
+    }
+
+    /**
+     * executes the move robot command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
                                final TerraBot terrabot,
@@ -28,8 +44,8 @@ public class MoveRobot {
         int bestX = -1;
         int bestY = -1;
 
-        // iterate through all 4 neighbors
-        for (int i = 0; i < 4; i++) {
+        // iterate through all neighbors
+        for (int i = 0; i < DIRECTIONS; i++) {
             int nextX = currentX + dx[i];
             int nextY = currentY + dy[i];
 
@@ -66,6 +82,9 @@ public class MoveRobot {
 
     /**
      * helper method to calculate the risk factor of a specific cell
+     *
+     * @param cell The cell to evaluate.
+     * @return The calculated risk score.
      */
     private static double calculateCellRisk(final Cell cell) {
         double score = 0;

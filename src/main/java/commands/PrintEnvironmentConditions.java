@@ -12,7 +12,7 @@ import model.Cell;
 import model.PlayGame;
 import model.TerraBot;
 
-public class PrintEnvironmentConditions {
+public final class PrintEnvironmentConditions {
 
     private static final String CMD_KEY = "command";
     private static final String CMD_NAME = "printEnvConditions";
@@ -25,6 +25,18 @@ public class PrintEnvironmentConditions {
     private static final String KEY_PLANTS = "plants";
     private static final String KEY_ANIMALS = "animals";
 
+    // private constructor to prevent instantiation of utility class
+    private PrintEnvironmentConditions() {
+    }
+
+    /**
+     * executes the print environment conditions command
+     *
+     * @param command  The input command details.
+     * @param playGame The current game instance.
+     * @param terrabot The robot instance.
+     * @param output   The JSON output node.
+     */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
                                final TerraBot terrabot,

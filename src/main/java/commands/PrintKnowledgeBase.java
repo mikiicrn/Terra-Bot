@@ -6,11 +6,25 @@ import fileio.CommandInput;
 import model.PlayGame;
 import model.TerraBot;
 
-public class PrintKnowledgeBase {
-    public static void command(CommandInput command,
-                               PlayGame playGame,
-                               TerraBot terrabot,
-                               ArrayNode output) {
+public final class PrintKnowledgeBase {
+
+
+    // private constructor to prevent instantiation of utility class
+    private PrintKnowledgeBase() {
+    }
+
+    /**
+     * executes the print knowledge base command
+     *
+     * @param command  The input command.
+     * @param playGame The game instance.
+     * @param terrabot The robot instance.
+     * @param output   The output array.
+     */
+    public static void command(final CommandInput command,
+                               final PlayGame playGame,
+                               final TerraBot terrabot,
+                               final ArrayNode output) {
         ObjectNode root = output.addObject();
         root.put("command", "printKnowledgeBase");
         ArrayNode knowledgeOutput = root.putArray("output");

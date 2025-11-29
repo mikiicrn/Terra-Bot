@@ -1,28 +1,58 @@
 package entities.soil;
 
-public class TundraSoil extends Soil {
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.SoilInput;
+
+public final class TundraSoil extends Soil {
+
     private final double permafrostDepth;
 
-    public TundraSoil(fileio.SoilInput soilInput) {
+    private static final double NITROGEN_WEIGHT = 0.7;
+    private static final double ORGANIC_WEIGHT = 0.5;
+    private static final double FROST_PENALTY = 1.5;
+    private static final double MAX_SCORE = 100.0;
+    private static final double ROUNDING_FACTOR = 100.0;
+
+    private static final double PROB_BASE = 50.0;
+    private static final double PROB_DIVISOR = 50.0;
+    private static final double PERCENTAGE_SCALE = 100.0;
+
+    public TundraSoil(final SoilInput soilInput) {
         super(soilInput);
         this.permafrostDepth = soilInput.getPermafrostDepth();
     }
 
+    /**
+     * calculates the quality of tundra soil based on nutrients and permafrost
+     *
+     * @return the calculated quality score
+     */
     @Override
     public double getQuality() {
-        double score = (nitrogen * 0.7) + (organicMatter * 0.5) - (permafrostDepth * 1.5);
-        double normalizeScore, finalScore;
-        normalizeScore = Math.max(0, Math.min(100, score));
-        finalScore = Math.round(normalizeScore * 100.0) / 100.0;
-        return finalScore;
+        double score = (nitrogen * NITROGEN_WEIGHT)
+                + (organicMatter * ORGANIC_WEIGHT)
+                - (permafrostDepth * FROST_PENALTY);
+
+        double normalizeScore = Math.max(0, Math.min(MAX_SCORE, score));
+        return Math.round(normalizeScore * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
+    /**
+     * calculates the probability of interaction based on permafrost depth
+     *
+     * @return the probability value
+     */
     public double calculateProbability() {
-        return 	(50 - permafrostDepth) / 50 * 100;
+        return (PROB_BASE - permafrostDepth) / PROB_DIVISOR * PERCENTAGE_SCALE;
     }
 
+    /**
+     * exports the tundra soil data to a JSON object
+     *
+     * @param node the JSON node to populate
+     */
     @Override
-    public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {
+    public void toJson(final ObjectNode node) {
         double soilQuality = getQuality();
         node.put("type", type);
         node.put("name", name);

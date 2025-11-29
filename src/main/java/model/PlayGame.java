@@ -9,9 +9,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class PlayGame {
+public final class PlayGame {
     private Cell[][] grid;
-    private int width, height;
+    private int width;
+    private int height;
     private int currentTime = 0;
 
     private boolean activeWeather = false;
@@ -19,8 +20,10 @@ public class PlayGame {
 
     private static final int WEATHER_DURATION = 2;
     private static final int ANIMAL_UPDATE_INTERVAL = 2;
+    private static final double ORGANIC_MATTER_BONUS = 0.5;
+    private static final int DIRECTIONS_COUNT = 4;
 
-    public PlayGame(int width, int height) {
+    public PlayGame(final int width, final int height) {
         this.width = width;
         this.height = height;
         this.grid = new Cell[width][height];
@@ -32,7 +35,12 @@ public class PlayGame {
         }
     }
 
-    public void setCurrentTime(int time) {
+    /**
+     * sets the current simulation time and checks for weather expiration
+     *
+     * @param time the new time value
+     */
+    public void setCurrentTime(final int time) {
         this.currentTime = time;
         checkWeatherExpiration();
     }
@@ -48,7 +56,7 @@ public class PlayGame {
 
     // --- Weather Logic ---
 
-    private String getEffectedAirType(String eventType) {
+    private String getEffectedAirType(final String eventType) {
         if (eventType == null) {
             return null;
         }
@@ -63,7 +71,13 @@ public class PlayGame {
         };
     }
 
-    public boolean applyWeather(boolean isActive) {
+    /**
+     * applies or removes weather effects on the grid based on the active event
+     *
+     * @param isActive true to enable weather effects, false to disable
+     * @return true if any cells were affected, false otherwise
+     */
+    public boolean applyWeather(final boolean isActive) {
         String eventType = Weather.getType();
         if (eventType == null) {
             return false;
@@ -92,11 +106,25 @@ public class PlayGame {
 
     // --- Grid setters & getters ---
 
-    public boolean isValidPosition(int x, int y) {
+    /**
+     * checks if the given coordinates are within the grid boundaries
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return true if valid, false otherwise
+     */
+    public boolean isValidPosition(final int x, final int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
-    public Cell getCell(int x, int y) {
+    /**
+     * retrieves the cell at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the cell object or null if out of bounds
+     */
+    public Cell getCell(final int x, final int y) {
         if (!isValidPosition(x, y)) {
             return null;
         }
@@ -104,26 +132,64 @@ public class PlayGame {
         return grid[x][y];
     }
 
-    public void setAir(int x, int y, entities.air.Air air) {
+    /**
+     * places an air entity at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param air the air entity to place
+     */
+    public void setAir(final int x, final int y, final entities.air.Air air) {
         grid[x][y].setAir(air);
     }
 
-    public void setWater(int x, int y, entities.water.Water water) {
+    /**
+     * places a water entity at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param water the water entity to place
+     */
+    public void setWater(final int x, final int y, final entities.water.Water water) {
         grid[x][y].setWater(water);
     }
 
-    public void setSoil(int x, int y, entities.soil.Soil soil) {
+    /**
+     * places a soil entity at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param soil the soil entity to place
+     */
+    public void setSoil(final int x, final int y, final entities.soil.Soil soil) {
         grid[x][y].setSoil(soil);
     }
 
-    public void setPlant(int x, int y, entities.plant.Plant plant) {
+    /**
+     * places a plant entity at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param plant the plant entity to place
+     */
+    public void setPlant(final int x, final int y, final entities.plant.Plant plant) {
         grid[x][y].setPlant(plant);
     }
 
-    public void setAnimal(int x, int y, entities.animal.Animal animal) {
+    /**
+     * places an animal entity at the specified coordinates
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param animal the animal entity to place
+     */
+    public void setAnimal(final int x, final int y, final entities.animal.Animal animal) {
         grid[x][y].setAnimal(animal);
     }
 
+    /**
+     * updates all scanned entities (plants, water, animals) in the grid
+     */
     public void updateScanned() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -136,9 +202,11 @@ public class PlayGame {
         }
     }
 
-    private void processPlant(Cell cell) {
+    private void processPlant(final Cell cell) {
         entities.plant.Plant plant = cell.getPlant();
-        if (plant == null || !plant.isScanned()) return;
+        if (plant == null || !plant.isScanned()) {
+            return;
+        }
 
         if (plant.getAge() == entities.plant.Plant.Age.Dead) {
             cell.setPlant(null);
@@ -147,9 +215,11 @@ public class PlayGame {
         }
     }
 
-    private void processWater(Cell cell) {
+    private void processWater(final Cell cell) {
         entities.water.Water water = cell.getWater();
-        if (water == null || !water.isScanned()) return;
+        if (water == null || !water.isScanned()) {
+            return;
+        }
 
         int timeSinceScan = this.currentTime - water.getScanTime();
         if (timeSinceScan > 0 && timeSinceScan % 2 == 0) {
@@ -157,9 +227,11 @@ public class PlayGame {
         }
     }
 
-    private void processAnimal(Cell currentCell, int x, int y) {
+    private void processAnimal(final Cell currentCell, final int x, final int y) {
         entities.animal.Animal animal = currentCell.getAnimal();
-        if (animal == null || !animal.isScanned()) return;
+        if (animal == null || !animal.isScanned()) {
+            return;
+        }
 
         entities.air.Air air = currentCell.getAir();
         animal.updateState(air != null && air.isToxic());
@@ -172,7 +244,7 @@ public class PlayGame {
             if (animal.isCarnivoreOrParasite() && nextCell.getAnimal() != null) {
                 animal.setMass(animal.getMass() + nextCell.getAnimal().getMass());
                 if (nextCell.getSoil() != null) {
-                    nextCell.getSoil().updateOrganicMatter(0.5);
+                    nextCell.getSoil().updateOrganicMatter(ORGANIC_MATTER_BONUS);
                 }
                 animal.feed();
                 nextCell.setAnimal(null);
@@ -191,7 +263,7 @@ public class PlayGame {
         }
     }
 
-    private Cell getNextCellForAnimal(int x, int y) {
+    private Cell getNextCellForAnimal(final int x, final int y) {
         List<Cell> neighbors = getNeighbors(x, y);
 
         Cell bestOption = findBestWaterQuality(neighbors, true);
@@ -221,13 +293,16 @@ public class PlayGame {
      * requirePlant = true -> seach only in cells with plants
      * requirePlant = false -> search in all cells with water
      */
-    private Cell findBestWaterQuality(List<Cell> neighbors, boolean requirePlant) {
+    private Cell findBestWaterQuality(final List<Cell> neighbors,
+                                      final boolean requirePlant) {
         Cell bestCell = null;
         double maxQuality = 0;
 
         for (Cell cell : neighbors) {
             if (cell.getWater() != null) {
-                if (requirePlant && cell.getPlant() == null) continue;
+                if (requirePlant && cell.getPlant() == null) {
+                    continue;
+                }
 
                 if (cell.getWater().getQuality() > maxQuality) {
                     maxQuality = cell.getWater().getQuality();
@@ -238,12 +313,12 @@ public class PlayGame {
         return bestCell;
     }
 
-    private List<Cell> getNeighbors(int x, int y) {
+    private List<Cell> getNeighbors(final int x, final int y) {
         List<Cell> neighbors = new ArrayList<>();
         int[] dx = {1, 0, -1, 0};
         int[] dy = {0, 1, 0, -1};
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < DIRECTIONS_COUNT; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
             if (isValidPosition(nx, ny)) {

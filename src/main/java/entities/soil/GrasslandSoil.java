@@ -1,28 +1,60 @@
 package entities.soil;
 
-public class GrasslandSoil extends Soil {
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fileio.SoilInput;
+
+public final class GrasslandSoil extends Soil {
+
     private final double rootDensity;
 
-    public GrasslandSoil(fileio.SoilInput soilInput) {
+    private static final double NITROGEN_WEIGHT = 1.3;
+    private static final double ORGANIC_WEIGHT = 1.5;
+    private static final double ROOT_WEIGHT = 0.8;
+    private static final double MAX_SCORE = 100.0;
+    private static final double ROUNDING_FACTOR = 100.0;
+
+    private static final double PROB_BASE = 50.0;
+    private static final double PROB_WATER_WEIGHT = 0.5;
+    private static final double PROB_DIVISOR = 75.0;
+    private static final double PERCENTAGE_SCALE = 100.0;
+
+    public GrasslandSoil(final SoilInput soilInput) {
         super(soilInput);
         this.rootDensity = soilInput.getRootDensity();
     }
 
+    /**
+     * calculates the quality of grassland soil based on nutrients and root density
+     *
+     * @return the calculated quality score
+     */
     @Override
     public double getQuality() {
-        double score = (nitrogen * 1.3) + (organicMatter * 1.5) + (rootDensity * 0.8);
-        double normalizeScore, finalScore;
-        normalizeScore = Math.max(0, Math.min(100, score));
-        finalScore = Math.round(normalizeScore * 100.0) / 100.0;
-        return finalScore;
+        double score = (nitrogen * NITROGEN_WEIGHT)
+                + (organicMatter * ORGANIC_WEIGHT)
+                + (rootDensity * ROOT_WEIGHT);
+
+        double normalizeScore = Math.max(0, Math.min(MAX_SCORE, score));
+        return Math.round(normalizeScore * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
+    /**
+     * calculates the probability of interaction based on root density and water retention
+     *
+     * @return the probability value
+     */
     public double calculateProbability() {
-        return ((50 - rootDensity) + waterRetention * 0.5) / 75 * 100;
+        return ((PROB_BASE - rootDensity) + waterRetention * PROB_WATER_WEIGHT)
+                / PROB_DIVISOR * PERCENTAGE_SCALE;
     }
 
+    /**
+     * exports the grassland soil data to a JSON object
+     *
+     * @param node the JSON node to populate
+     */
     @Override
-    public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {
+    public void toJson(final ObjectNode node) {
         double soilQuality = getQuality();
         node.put("type", type);
         node.put("name", name);

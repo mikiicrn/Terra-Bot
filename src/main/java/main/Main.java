@@ -3,24 +3,39 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import fileio.*;
-import model.*;
-import entities.air.*;
-import entities.water.*;
-import entities.soil.*;
-import entities.animal.*;
-import entities.plant.*;
+import entities.air.Air;
+import entities.air.DesertAir;
+import entities.air.MountainAir;
+import entities.air.PolarAir;
+import entities.air.Temperate;
+import entities.air.TropicalAir;
+import entities.animal.Animal;
+import entities.plant.Plant;
+import entities.soil.DesertSoil;
+import entities.soil.ForestSoil;
+import entities.soil.GrasslandSoil;
+import entities.soil.Soil;
+import entities.soil.SwampSoil;
+import entities.soil.TundraSoil;
+import entities.water.Water;
+import fileio.AirInput;
+import fileio.AnimalInput;
+import fileio.CommandInput;
+import fileio.InputLoader;
+import fileio.PairInput;
+import fileio.PlantInput;
+import fileio.SimulationInput;
+import fileio.SoilInput;
+import fileio.TerritorySectionParamsInput;
+import fileio.WaterInput;
+import model.PlayGame;
+import model.Simulation;
+import model.TerraBot;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static java.lang.IO.println;
-
-/**
- * The entry point to this homework. It runs the checker that tests your
- * implementation.
- */
 public final class Main {
 
     private Main() {
@@ -35,7 +50,7 @@ public final class Main {
      * @throws IOException when files cannot be loaded.
      */
     public static void action(final String inputPath,
-            final String outputPath) throws IOException {
+                              final String outputPath) throws IOException {
 
         InputLoader inputLoader = new InputLoader(inputPath);
         ArrayNode output = MAPPER.createArrayNode();
@@ -56,20 +71,23 @@ public final class Main {
                 if (!simulationInstance.isRunning()) {
                     if (simulationIndex < simulations.size()) {
                         SimulationInput simulationInput = simulations.get(simulationIndex);
-                        TerritorySectionParamsInput sections = simulationInput.getTerritorySectionParams();
-                        System.out.println("Map dimensions: " + simulationInput.getTerritoryDim());
+                        TerritorySectionParamsInput sections =
+                                simulationInput.getTerritorySectionParams();
+                        System.out.println("Map dimensions: "
+                                + simulationInput.getTerritoryDim());
 
                         terraBot = new TerraBot(simulationInput.getEnergyPoints());
                         playGame = getGameWorld(simulationInput, sections);
                         simulationIndex++;
-                        lastTime = 0; // Reset time for new simulation
+                        lastTime = 0; // reset time for new simulation
                     }
                 }
             }
 
             int currentTime = command.getTimestamp();
-            // Update for all timestamps between last command and current
-            if (playGame != null && (simulationInstance.isRunning() || type.equals("startSimulation"))) {
+            // update for all timestamps between last command and current
+            boolean isRunning = simulationInstance.isRunning();
+            if (playGame != null && (isRunning || type.equals("startSimulation"))) {
                 for (int t = lastTime + 1; t <= currentTime; t++) {
                     playGame.setCurrentTime(t);
                     playGame.updateScanned();
@@ -80,30 +98,13 @@ public final class Main {
             simulationInstance.handleCommand(command, playGame, terraBot, output);
         }
 
-        /*
-         * TODO Implement your function here
-         *
-         * How to add output to the output array?
-         * There are multiple ways to do this, here is one example:
-         *
-         *
-         * ObjectNode objectNode = MAPPER.createObjectNode();
-         * objectNode.put("field_name", "field_value");
-         *
-         * ArrayNode arrayNode = MAPPER.createArrayNode();
-         * arrayNode.add(objectNode);
-         *
-         * output.add(arrayNode);
-         * output.add(objectNode);
-         *
-         */
-
         File outputFile = new File(outputPath);
         outputFile.getParentFile().mkdirs();
         WRITER.writeValue(outputFile, output);
     }
 
-    private static PlayGame getGameWorld(SimulationInput simulation, TerritorySectionParamsInput sections) {
+    private static PlayGame getGameWorld(final SimulationInput simulation,
+                                         final TerritorySectionParamsInput sections) {
         int dimX = Integer.parseInt(simulation.getTerritoryDim().split("x")[0]);
         int dimY = Integer.parseInt(simulation.getTerritoryDim().split("x")[1]);
         PlayGame playGame = new PlayGame(dimX, dimY);
