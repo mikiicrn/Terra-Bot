@@ -1,19 +1,16 @@
-package Entities.Soil;
+package entities.soil;
 
-import  com.fasterxml.jackson.databind.node.ObjectNode;
-import fileio.SoilInput;
+public class GrasslandSoil extends Soil {
+    private final double rootDensity;
 
-public class TundraSoil extends Soil {
-    private final double permafrostDepth;
-
-    public TundraSoil(fileio.SoilInput soilInput) {
+    public GrasslandSoil(fileio.SoilInput soilInput) {
         super(soilInput);
-        this.permafrostDepth = soilInput.getPermafrostDepth();
+        this.rootDensity = soilInput.getRootDensity();
     }
 
     @Override
     public double getQuality() {
-        double score = (nitrogen * 0.7) + (organicMatter * 0.5) - (permafrostDepth * 1.5);
+        double score = (nitrogen * 1.3) + (organicMatter * 1.5) + (rootDensity * 0.8);
         double normalizeScore, finalScore;
         normalizeScore = Math.max(0, Math.min(100, score));
         finalScore = Math.round(normalizeScore * 100.0) / 100.0;
@@ -21,7 +18,7 @@ public class TundraSoil extends Soil {
     }
 
     public double calculateProbability() {
-        return 	(50 - permafrostDepth) / 50 * 100;
+        return ((50 - rootDensity) + waterRetention * 0.5) / 75 * 100;
     }
 
     @Override
@@ -35,6 +32,6 @@ public class TundraSoil extends Soil {
         node.put("soilpH", soilpH);
         node.put("organicMatter", organicMatter);
         node.put("soilQuality", soilQuality);
-        node.put("permafrostDepth", permafrostDepth);
+        node.put("rootDensity", rootDensity);
     }
 }

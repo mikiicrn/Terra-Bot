@@ -38,8 +38,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestRunner {
     private static final ObjectMapper objectMapper = new ObjectMapper(
-            new JsonFactory().enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION)
-    );
+            new JsonFactory().enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION));
 
     private static final List<DevmindResult> devmindResults = new ArrayList<>();
 
@@ -47,28 +46,62 @@ public class TestRunner {
 
     public static Stream<Arguments> data() {
         return Stream.of(
-                Arguments.of("test01", "input/test01_initialize_entities.json", "out/out_test01_initialize_entities.json", "ref/ref_test01_initialize_entities.json", 3),
-                Arguments.of("test02", "input/test02_initialize_entities_errors.json", "out/out_test02_initialize_entities_errors.json", "ref/ref_test02_initialize_entities_errors.json", 2),
-                Arguments.of("test03", "input/test03_move_robot.json", "out/out_test03_move_robot.json", "ref/ref_test03_move_robot.json", 5),
-                Arguments.of("test04", "input/test04_move_robot_errors.json", "out/out_test04_move_robot_errors.json", "ref/ref_test04_move_robot_errors.json", 2),
-                Arguments.of("test05", "input/test05_env_condition.json", "out/out_test05_env_condition.json", "ref/ref_test05_env_condition.json", 2),
-                Arguments.of("test06", "input/test06_update_battery.json", "out/out_test06_update_battery.json", "ref/ref_test06_update_battery.json", 3),
-                Arguments.of("test07", "input/test07_update_battery_errors.json", "out/out_test07_update_battery_errors.json", "ref/ref_test07_update_battery_errors.json", 2),
-                Arguments.of("test08", "input/test08_change_weather.json", "out/out_test08_change_weather.json", "ref/ref_test08_change_weather.json", 3),
-                Arguments.of("test09", "input/test09_scan_plant.json", "out/out_test09_scan_plant.json", "ref/ref_test09_scan_plant.json", 3),
-                Arguments.of("test10", "input/test10_scan_water.json", "out/out_test10_scan_water.json", "ref/ref_test10_scan_water.json", 5),
-                Arguments.of("test11", "input/test11_scan_animal.json", "out/out_test11_scan_animal.json", "ref/ref_test11_scan_animal.json", 6),
-                Arguments.of("test12", "input/test12_scan_object_errors.json", "out/out_test12_scan_object_errors.json", "ref/ref_test12_scan_object_errors.json", 2),
-                Arguments.of("test13", "input/test13_learn_fact.json", "out/out_test13_learn_fact.json", "ref/ref_test13_learn_fact.json", 4),
-                Arguments.of("test14", "input/test14_improve_environment.json", "out/out_test14_improve_environment.json", "ref/ref_test14_improve_environment.json", 5),
-                Arguments.of("test15", "input/test15_improve_environment_errors.json", "out/out_test15_improve_environment_errors.json", "ref/ref_test15_improve_environment_errors.json", 2),
-                Arguments.of("test16", "input/test16_mid.json", "out/out_test16_mid.json", "ref/ref_test16_mid.json", 6),
-                Arguments.of("test17", "input/test17_multiple_simulations.json", "out/out_test17_multiple_simulations.json", "ref/ref_test17_multiple_simulations.json", 3),
-                Arguments.of("test18", "input/test18_multiple_simulations_error.json", "out/out_test18_multiple_simulations_error.json", "ref/ref_test18_multiple_simulations_error.json", 2),
-                Arguments.of("test19", "input/test19_complex_simple.json", "out/out_test19_complex_simple.json", "ref/ref_test19_complex_simple.json", 6),
-                Arguments.of("test20", "input/test20_complex_errors.json", "out/out_test20_complex_errors.json", "ref/ref_test20_complex_errors.json", 6),
-                Arguments.of("test21", "input/test21_complex_combined.json", "out/out_test21_complex_combined.json", "ref/ref_test21_complex_combined.json", 8)
-        );
+                Arguments.of("test01", "input/test01_initialize_entities.json",
+                        "out/out_test01_initialize_entities.json",
+                        "ref/ref_test01_initialize_entities.json", 3),
+                Arguments.of("test02", "input/test02_initialize_entities_errors.json",
+                        "out/out_test02_initialize_entities_errors.json",
+                        "ref/ref_test02_initialize_entities_errors.json", 2),
+                Arguments.of("test03", "input/test03_move_robot.json",
+                        "out/out_test03_move_robot.json", "ref/ref_test03_move_robot.json", 5),
+                Arguments.of("test04", "input/test04_move_robot_errors.json",
+                        "out/out_test04_move_robot_errors.json",
+                        "ref/ref_test04_move_robot_errors.json", 2),
+                Arguments.of("test05", "input/test05_env_condition.json",
+                        "out/out_test05_env_condition.json", "ref/ref_test05_env_condition.json", 2),
+                Arguments.of("test06", "input/test06_update_battery.json",
+                        "out/out_test06_update_battery.json", "ref/ref_test06_update_battery.json",
+                        3),
+                Arguments.of("test07", "input/test07_update_battery_errors.json",
+                        "out/out_test07_update_battery_errors.json",
+                        "ref/ref_test07_update_battery_errors.json", 2),
+                Arguments.of("test08", "input/test08_change_weather.json",
+                        "out/out_test08_change_weather.json", "ref/ref_test08_change_weather.json",
+                        3),
+                Arguments.of("test09", "input/test09_scan_plant.json",
+                        "out/out_test09_scan_plant.json", "ref/ref_test09_scan_plant.json", 3),
+                Arguments.of("test10", "input/test10_scan_water.json",
+                        "out/out_test10_scan_water.json", "ref/ref_test10_scan_water.json", 5),
+                Arguments.of("test11", "input/test11_scan_animal.json",
+                        "out/out_test11_scan_animal.json", "ref/ref_test11_scan_animal.json", 6),
+                Arguments.of("test12", "input/test12_scan_object_errors.json",
+                        "out/out_test12_scan_object_errors.json",
+                        "ref/ref_test12_scan_object_errors.json", 2),
+                Arguments.of("test13", "input/test13_learn_fact.json",
+                        "out/out_test13_learn_fact.json", "ref/ref_test13_learn_fact.json", 4),
+                Arguments.of("test14", "input/test14_improve_environment.json",
+                        "out/out_test14_improve_environment.json",
+                        "ref/ref_test14_improve_environment.json", 5),
+                Arguments.of("test15", "input/test15_improve_environment_errors.json",
+                        "out/out_test15_improve_environment_errors.json",
+                        "ref/ref_test15_improve_environment_errors.json", 2),
+                Arguments.of("test16", "input/test16_mid.json", "out/out_test16_mid.json", "ref/ref_test16_mid.json",
+                        6),
+                Arguments.of("test17", "input/test17_multiple_simulations.json",
+                        "out/out_test17_multiple_simulations.json",
+                        "ref/ref_test17_multiple_simulations.json", 3),
+                Arguments.of("test18", "input/test18_multiple_simulations_error.json",
+                        "out/out_test18_multiple_simulations_error.json",
+                        "ref/ref_test18_multiple_simulations_error.json", 2),
+                Arguments.of("test19", "input/test19_complex_simple.json",
+                        "out/out_test19_complex_simple.json", "ref/ref_test19_complex_simple.json",
+                        6),
+                Arguments.of("test20", "input/test20_complex_errors.json",
+                        "out/out_test20_complex_errors.json", "ref/ref_test20_complex_errors.json",
+                        6),
+                Arguments.of("test21", "input/test21_complex_combined.json",
+                        "out/out_test21_complex_combined.json",
+                        "ref/ref_test21_complex_combined.json", 8));
     }
 
     @ParameterizedTest
@@ -78,8 +111,7 @@ public class TestRunner {
             final String inputPath,
             final String outputPath,
             final String refPath,
-            final int points
-    ) throws IOException {
+            final int points) throws IOException {
         Main.action(inputPath, outputPath);
 
         JsonNode inputJson = objectMapper.readTree(new File(inputPath));
@@ -89,16 +121,14 @@ public class TestRunner {
         try {
             assertThatJson(outputJson).isEqualTo(refJson);
             devmindResults.add(new DevmindResult(
-                testName,
-                PASSED,
-                points
-            ));
+                    testName,
+                    PASSED,
+                    points));
         } catch (AssertionError e) {
             devmindResults.add(new DevmindErrorResult(
                     testName,
                     points,
-                    e.getMessage()
-            ));
+                    e.getMessage()));
             throw e;
         }
 
@@ -110,8 +140,7 @@ public class TestRunner {
         Configuration config = ConfigurationLoader.loadConfiguration(
                 new InputSource(configFile.getAbsolutePath()),
                 new PropertiesExpander(System.getProperties()),
-                ConfigurationLoader.IgnoredModulesOptions.EXECUTE
-        );
+                ConfigurationLoader.IgnoredModulesOptions.EXECUTE);
 
         CheckstyleAuditListener checkstyleAuditListener = new CheckstyleAuditListener();
         Checker checker = new Checker();
@@ -129,28 +158,24 @@ public class TestRunner {
             devmindResults.add(new DevmindResult(
                     "checkstyle",
                     "",
-                    CheckerConstants.CHECKSTYLE_POINTS
-            ));
+                    CheckerConstants.CHECKSTYLE_POINTS));
             System.out.println(checkStyleErrors);
             TestCaseWatcher.totalPoints += CheckerConstants.CHECKSTYLE_POINTS;
-        }
-        catch (AssertionError e) {
+        } catch (AssertionError e) {
             devmindResults.add(new DevmindErrorResult(
                     "checkstyle",
                     CheckerConstants.CHECKSTYLE_POINTS,
-                    e.getMessage()
-            ));
+                    e.getMessage()));
             throw new CheckstyleException(checkStyleErrors);
         }
     }
 
     private boolean hasNonDeveloperAuthor(RevCommit commit) {
         List<String> exceptedAuthors = List.of(
-            "david.capragiu@gmail.com",
-            "alina.tudorache872@gmail.com",
-            "63539529+Dievaid@users.noreply.github.com",
-            "69516563+alina-t-872@users.noreply.github.com"
-        );
+                "david.capragiu@gmail.com",
+                "alina.tudorache872@gmail.com",
+                "63539529+Dievaid@users.noreply.github.com",
+                "69516563+alina-t-872@users.noreply.github.com");
 
         String userEmail = commit.getAuthorIdent().getEmailAddress();
         return !exceptedAuthors.contains(userEmail);
@@ -173,15 +198,13 @@ public class TestRunner {
             devmindResults.add(new DevmindResult(
                     "git",
                     "",
-                    CheckerConstants.GIT_POINTS
-            ));
+                    CheckerConstants.GIT_POINTS));
             TestCaseWatcher.totalPoints += CheckerConstants.GIT_POINTS;
         } catch (IOException | AssertionError | GitAPIException e) {
             devmindResults.add(new DevmindErrorResult(
                     "git",
                     CheckerConstants.GIT_POINTS,
-                    e.getMessage()
-            ));
+                    e.getMessage()));
             throw e;
         }
     }
@@ -217,8 +240,7 @@ public class TestRunner {
         System.out.println("BEGIN-DEVMIND-TEST-RESULTS");
         System.out.println(objectMapper
                 .writerWithDefaultPrettyPrinter()
-                .writeValueAsString(devmindResults)
-        );
+                .writeValueAsString(devmindResults));
         System.out.println("END-DEVMIND-TEST-RESULTS");
     }
 }

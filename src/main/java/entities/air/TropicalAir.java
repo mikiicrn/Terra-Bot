@@ -1,22 +1,21 @@
-package Entities.Air;
+package entities.air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import Model.Weather;
+import model.Weather;
 
-public class MountainAir extends Air {
-    protected double altitude;
+public class TropicalAir extends Air {
+    protected double co2Level;
 
-    public MountainAir (fileio.AirInput airInput) {
-        super(airInput, 78.0);
-        this.altitude = airInput.getAltitude();
+    public TropicalAir(fileio.AirInput airInput) {
+        super(airInput, 82.0);
+        this.co2Level = airInput.getCo2Level();
     }
 
     @Override
-    public double getQuality(){
-        double oxygenFactor = oxygenLevel - (altitude/1000 * 0.5);
-        double normal_air_quality = (oxygenFactor * 2) + (humidity * 0.6);
+    public double getQuality() {
+        double normal_air_quality = (oxygenLevel * 2) + (humidity * 0.5) - (co2Level * 0.01);
         if (weatherAffected) {
-            normal_air_quality = normal_air_quality - (Weather.numberOfHikers * 0.1);
+            normal_air_quality = normal_air_quality + (Weather.getRainfall() * 0.3);
         }
         return round(normalize(normal_air_quality));
     }
@@ -31,6 +30,6 @@ public class MountainAir extends Air {
         node.put("temperature", temperature);
         node.put("oxygenLevel", oxygenLevel);
         node.put("airQuality", airQuality);
-        node.put("altitude", altitude);
+        node.put("co2Level", round(co2Level));
     }
 }

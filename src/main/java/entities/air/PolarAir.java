@@ -1,7 +1,7 @@
-package Entities.Air;
+package entities.air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import Model.Weather;
+import model.Weather;
 
 public class PolarAir extends Air {
     protected double iceCrystalConcentration;
@@ -15,7 +15,7 @@ public class PolarAir extends Air {
     public double getQuality(){
         double normal_air_quality = (oxygenLevel * 2) + (100-Math.abs(temperature)) - (iceCrystalConcentration * 0.05);
         if (weatherAffected) {
-            normal_air_quality = normal_air_quality - (Weather.windSpeed * 0.2);
+            normal_air_quality = normal_air_quality - (Weather.getWindSpeed() * 0.2);
         }
         return round(normalize(normal_air_quality));
     }

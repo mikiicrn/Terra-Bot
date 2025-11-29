@@ -1,7 +1,7 @@
-package Entities.Air;
+package entities.air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import Model.Weather;
+import model.Weather;
 
 public class Temperate extends Air {
     protected double pollenLevel;
@@ -15,7 +15,7 @@ public class Temperate extends Air {
     public double getQuality(){
         double normal_air_quality = (oxygenLevel * 2) + (humidity * 0.7) - (pollenLevel * 0.1);
         double seasonPenalty = 0.0;
-        if (Weather.newSeason.equalsIgnoreCase("spring")) {
+        if ("spring".equalsIgnoreCase(Weather.getNewSeason())) {
             seasonPenalty = 15.0;
         }
         if (weatherAffected) {

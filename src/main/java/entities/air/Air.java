@@ -1,10 +1,10 @@
-package Entities.Air;
+package entities.air;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.AirInput;
 import lombok.EqualsAndHashCode;
-import Entities.Entity;
+import entities.Entity;
 
 import lombok.Data;
 

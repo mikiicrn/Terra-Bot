@@ -1,4 +1,4 @@
-package Entities.Soil;
+package entities.soil;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.SoilInput;

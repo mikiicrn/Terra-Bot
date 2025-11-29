@@ -1,12 +1,11 @@
-package Entities.Soil;
+package entities.soil;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import fileio.SoilInput;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import Entities.Entity;
+import entities.Entity;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,17 +27,18 @@ abstract public class Soil extends Entity{
         this.organicMatter = soilInput.getOrganicMatter();
     }
 
-    public Soil addWaterRetention(double water) {
+    public void updateWaterRetention(double water) {
         this.waterRetention += water;
-        return this;
+        this.waterRetention = round(this.waterRetention);
     }
 
-    public Soil addOrganicMatter(double organicMatter) {
+    public void updateOrganicMatter(double organicMatter) {
         this.organicMatter += organicMatter;
-        return this;
+        this.organicMatter = round(this.organicMatter);
     }
 
     public abstract double getQuality();
+    public abstract double calculateProbability();
 
     public String getQualityLevel() {
         double quality = getQuality();

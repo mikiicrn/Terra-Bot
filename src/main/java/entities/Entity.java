@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
@@ -9,6 +9,8 @@ public abstract class Entity {
     protected String type;
     protected String name;
     protected double mass;
+    protected boolean scanned = false;
+    protected int scanTime = 0;
     protected int x, y;
     public void setPosition(int x, int y) {
         this.x = x;

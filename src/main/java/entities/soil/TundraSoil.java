@@ -1,20 +1,16 @@
-package Entities.Soil;
+package entities.soil;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import fileio.SoilInput;
+public class TundraSoil extends Soil {
+    private final double permafrostDepth;
 
-
-public class DesertSoil extends Soil {
-    private final double salinity;
-
-    public DesertSoil(SoilInput soilInput) {
+    public TundraSoil(fileio.SoilInput soilInput) {
         super(soilInput);
-        this.salinity = soilInput.getSalinity();
+        this.permafrostDepth = soilInput.getPermafrostDepth();
     }
 
     @Override
     public double getQuality() {
-        double score = (nitrogen * 0.5) + (waterRetention * 0.3) - (salinity * 2);
+        double score = (nitrogen * 0.7) + (organicMatter * 0.5) - (permafrostDepth * 1.5);
         double normalizeScore, finalScore;
         normalizeScore = Math.max(0, Math.min(100, score));
         finalScore = Math.round(normalizeScore * 100.0) / 100.0;
@@ -22,11 +18,11 @@ public class DesertSoil extends Soil {
     }
 
     public double calculateProbability() {
-        return (100 - waterRetention + salinity) / 100 * 100;
+        return 	(50 - permafrostDepth) / 50 * 100;
     }
 
     @Override
-    public void toJson(ObjectNode node) {
+    public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {
         double soilQuality = getQuality();
         node.put("type", type);
         node.put("name", name);
@@ -36,6 +32,6 @@ public class DesertSoil extends Soil {
         node.put("soilpH", soilpH);
         node.put("organicMatter", organicMatter);
         node.put("soilQuality", soilQuality);
-        node.put("salinity", salinity);
+        node.put("permafrostDepth", permafrostDepth);
     }
 }
