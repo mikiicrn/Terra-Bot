@@ -28,10 +28,10 @@ public final class Simulation {
     /**
      * handles the commands for the simulation
      *
-     * @param command  The input command.
-     * @param playGame The game instance.
-     * @param terrabot The robot instance.
-     * @param output   The output array.
+     * @param command  the input command
+     * @param playGame the game instance
+     * @param terrabot the robot instance
+     * @param output   the output array
      */
     public void handleCommand(final CommandInput command,
                               final PlayGame playGame,

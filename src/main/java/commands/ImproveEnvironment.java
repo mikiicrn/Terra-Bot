@@ -28,10 +28,10 @@ public final class ImproveEnvironment {
     /**
      * executes the improve environment command
      *
-     * @param command  The input command details.
-     * @param playGame The current game instance.
-     * @param terrabot The robot instance.
-     * @param output   The JSON output node.
+     * @param command  the input command details
+     * @param playGame the current game instance
+     * @param terrabot the robot instance
+     * @param output   the JSON output node
      */
     public static void command(final CommandInput command,
                                final PlayGame playGame,

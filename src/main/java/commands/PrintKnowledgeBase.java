@@ -16,10 +16,10 @@ public final class PrintKnowledgeBase {
     /**
      * executes the print knowledge base command
      *
-     * @param command  The input command.
-     * @param playGame The game instance.
-     * @param terrabot The robot instance.
-     * @param output   The output array.
+     * @param command  the input command
+     * @param playGame the game instance
+     * @param terrabot the robot instance
+     * @param output   the output array
      */
     public static void command(final CommandInput command,
                                final PlayGame playGame,

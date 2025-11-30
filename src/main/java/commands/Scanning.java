@@ -28,10 +28,10 @@ public final class Scanning {
     /**
      * executes the scanning command
      *
-     * @param command  The input command details.
-     * @param playGame The current game instance.
-     * @param terrabot The robot instance.
-     * @param output   The JSON output node.
+     * @param command  the input command details
+     * @param playGame the current game instance
+     * @param terrabot the robot instance
+     * @param output   the JSON output node
      */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
@@ -84,12 +84,12 @@ public final class Scanning {
     }
 
     /**
-     * Helper method to handle the common logic for a successful scan.
+     * helper method to handle the common logic for a successful scan
      *
-     * @param entity   The entity found in the cell.
-     * @param command  The input command.
-     * @param terrabot The robot instance.
-     * @return True if the entity exists and was processed, false otherwise.
+     * @param entity   the entity found in the cell
+     * @param command  the input command
+     * @param terrabot the robot instance
+     * @return true if the entity exists and was processed, false otherwise
      */
     private static boolean scanSuccess(final Entity entity,
                                        final CommandInput command,

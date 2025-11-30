@@ -12,9 +12,9 @@
         /**
          * appends a simulation state message to the output array
          *
-         * @param message The message to display (success or error).
-         * @param command The command that triggered this output.
-         * @param output  The JSON output array to append to.
+         * @param message the message to display (success or error)
+         * @param command the command that triggered this output
+         * @param output  the JSON output array to append to
          */
         public static void stateSimulation(final String message,
                                            final CommandInput command,

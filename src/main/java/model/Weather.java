@@ -25,9 +25,7 @@ public final class Weather {
     @Getter @Setter
     private static double rainfall;
 
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
+    // private constructor to prevent instantiation of this utility class
     private Weather() {
     }
 }

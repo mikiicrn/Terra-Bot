@@ -25,10 +25,10 @@ public final class PrintMap {
     /**
      * executes the print map command
      *
-     * @param command  The input command details.
-     * @param playGame The current game instance.
-     * @param terrabot The robot instance.
-     * @param output   The JSON output node.
+     * @param command  the input command details
+     * @param playGame the current game instance
+     * @param terrabot the robot instance
+     * @param output   the JSON output node
      */
     public static void command(final CommandInput command,
                                final PlayGame playGame,
@@ -47,7 +47,10 @@ public final class PrintMap {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Cell cell = playGame.getCell(x, y);
-                processCellNode(cell, x, y, outArray);
+                // Null check added here to satisfy the warning
+                if (cell != null) {
+                    processCellNode(cell, x, y, outArray);
+                }
             }
         }
 
@@ -72,7 +75,12 @@ public final class PrintMap {
         cellNode.put(TOTAL_KEY, total);
 
         // add quality level
-        cellNode.put(SOIL_KEY, cell.getSoil().getQualityLevel());
-        cellNode.put(AIR_KEY, cell.getAir().getQualityLevel());
+        // assume Air and Soil are never null if the Cell exists
+        if (cell.getAir() != null) {
+            cellNode.put(AIR_KEY, cell.getAir().getQualityLevel());
+        }
+        if (cell.getSoil() != null) {
+            cellNode.put(SOIL_KEY, cell.getSoil().getQualityLevel());
+        }
     }
 }

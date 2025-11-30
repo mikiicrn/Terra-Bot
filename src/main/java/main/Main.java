@@ -47,7 +47,7 @@ public final class Main {
     /**
      * @param inputPath  input file path
      * @param outputPath output file path
-     * @throws IOException when files cannot be loaded.
+     * @throws IOException when files cannot be loaded
      */
     public static void action(final String inputPath,
                               final String outputPath) throws IOException {
@@ -77,7 +77,7 @@ public final class Main {
                                 + simulationInput.getTerritoryDim());
 
                         terraBot = new TerraBot(simulationInput.getEnergyPoints());
-                        playGame = getGameWorld(simulationInput, sections);
+                        playGame = getPLayGame(simulationInput, sections);
                         simulationIndex++;
                         lastTime = 0; // reset time for new simulation
                     }
@@ -103,7 +103,7 @@ public final class Main {
         WRITER.writeValue(outputFile, output);
     }
 
-    private static PlayGame getGameWorld(final SimulationInput simulation,
+    private static PlayGame getPLayGame(final SimulationInput simulation,
                                          final TerritorySectionParamsInput sections) {
         int dimX = Integer.parseInt(simulation.getTerritoryDim().split("x")[0]);
         int dimY = Integer.parseInt(simulation.getTerritoryDim().split("x")[1]);
